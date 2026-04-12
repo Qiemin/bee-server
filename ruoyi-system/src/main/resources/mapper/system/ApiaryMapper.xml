@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ApiaryMapper">
+    
+    <resultMap type="Apiary" id="ApiaryResult">
+        <result property="apiaryId"    column="apiary_id"    />
+        <result property="apiaryName"    column="apiary_name"    />
+        <result property="contactName"    column="contact_name"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="apiaryAddress"    column="apiary_address"    />
+    </resultMap>
+
+    <sql id="selectApiaryVo">
+        select apiary_id, apiary_name, contact_name, contact_phone, apiary_address from apiary
+    </sql>
+
+    <select id="selectApiaryList" parameterType="Apiary" resultMap="ApiaryResult">
+        <include refid="selectApiaryVo"/>
+        <where>  
+            <if test="apiaryName != null  and apiaryName != ''"> and apiary_name like concat('%', #{apiaryName}, '%')</if>
+            <if test="contactName != null  and contactName != ''"> and contact_name like concat('%', #{contactName}, '%')</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="apiaryAddress != null  and apiaryAddress != ''"> and apiary_address = #{apiaryAddress}</if>
+        </where>
+    </select>
+    
+    <select id="selectApiaryByApiaryId" parameterType="Long" resultMap="ApiaryResult">
+        <include refid="selectApiaryVo"/>
+        where apiary_id = #{apiaryId}
+    </select>
+
+    <insert id="insertApiary" parameterType="Apiary" useGeneratedKeys="true" keyProperty="apiaryId">
+        insert into apiary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="apiaryName != null and apiaryName != ''">apiary_name,</if>
+            <if test="contactName != null and contactName != ''">contact_name,</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone,</if>
+            <if test="apiaryAddress != null and apiaryAddress != ''">apiary_address,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="apiaryName != null and apiaryName != ''">#{apiaryName},</if>
+            <if test="contactName != null and contactName != ''">#{contactName},</if>
+            <if test="contactPhone != null and contactPhone != ''">#{contactPhone},</if>
+            <if test="apiaryAddress != null and apiaryAddress != ''">#{apiaryAddress},</if>
+         </trim>
+    </insert>
+
+    <update id="updateApiary" parameterType="Apiary">
+        update apiary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="apiaryName != null and apiaryName != ''">apiary_name = #{apiaryName},</if>
+            <if test="contactName != null and contactName != ''">contact_name = #{contactName},</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone = #{contactPhone},</if>
+            <if test="apiaryAddress != null and apiaryAddress != ''">apiary_address = #{apiaryAddress},</if>
+        </trim>
+        where apiary_id = #{apiaryId}
+    </update>
+
+    <delete id="deleteApiaryByApiaryId" parameterType="Long">
+        delete from apiary where apiary_id = #{apiaryId}
+    </delete>
+
+    <delete id="deleteApiaryByApiaryIds" parameterType="String">
+        delete from apiary where apiary_id in 
+        <foreach item="apiaryId" collection="array" open="(" separator="," close=")">
+            #{apiaryId}
+        </foreach>
+    </delete>
+</mapper>
