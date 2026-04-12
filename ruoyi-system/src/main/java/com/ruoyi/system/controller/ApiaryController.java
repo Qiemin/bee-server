@@ -28,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2026-04-12
  */
 @RestController
-@RequestMapping("/system/apiary")
+@RequestMapping("/apiary/apiary")
 public class ApiaryController extends BaseController
 {
     @Autowired
